@@ -8,67 +8,107 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
 background:linear-gradient(180deg,#fdeff4,#fff8fb);
 font-family:'Poppins',sans-serif;
 min-height:100vh;
-padding:28px 15px;
-display:flex;
-justify-content:center;
-align-items:center;
-color:#444;
+padding:26px 15px;
+color:#4a4045;
 }
 
 .app{
 width:100%;
-max-width:620px;
+max-width:650px;
+margin:auto;
 background:white;
-border-radius:34px;
-padding:32px 24px;
+border-radius:36px;
+padding:30px 22px;
 text-align:center;
-box-shadow:0 12px 30px rgba(216,91,146,.15);
+box-shadow:0 14px 35px rgba(216,91,146,.16);
 border:1px solid #f8dce8;
 }
 
 .logo{
-font-size:42px;
-margin-bottom:5px;
+font-size:44px;
+margin-bottom:6px;
 }
 
 h1{
 font-family:'Playfair Display',serif;
-font-size:46px;
+font-size:48px;
 color:#3f3f3f;
+margin-bottom:6px;
+}
+
+.greeting{
+font-size:18px;
+font-weight:600;
+color:#b05b83;
 margin-bottom:8px;
 }
 
-.subtitle{
+.time-box{
+background:#fff8fb;
+border:1px solid #f4d8e5;
+border-radius:22px;
+padding:16px;
+margin:18px 0 24px;
+box-shadow:0 6px 16px rgba(216,91,146,.08);
+}
+
+.time-box p{
+font-size:14px;
+color:#777;
+margin:4px 0;
+}
+
+.time{
+font-size:24px!important;
+font-weight:600;
+color:#7d4960!important;
+}
+
+.weather{
+margin-top:10px;
+font-size:14px;
 color:#b05b83;
-font-size:15px;
-margin-bottom:24px;
 }
 
 .letter{
 background:#fff8fb;
 border:1px solid #f4d8e5;
-border-radius:26px;
+border-radius:28px;
 padding:24px;
 text-align:left;
 margin-bottom:26px;
 box-shadow:0 6px 18px rgba(216,91,146,.08);
+position:relative;
+}
+
+.letter::before{
+content:"💌";
+position:absolute;
+top:-18px;
+left:50%;
+transform:translateX(-50%);
+background:white;
+border:1px solid #f4d8e5;
+border-radius:50%;
+width:46px;
+height:46px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:24px;
 }
 
 .letter h2{
 text-align:center;
 font-family:'Playfair Display',serif;
-font-size:28px;
-margin-bottom:15px;
+font-size:29px;
+margin:16px 0 14px;
 color:#7d4960;
 }
 
@@ -90,7 +130,7 @@ color:inherit;
 display:block;
 background:#fff8fb;
 border:1px solid #f4d8e5;
-border-radius:24px;
+border-radius:25px;
 padding:22px;
 transition:.25s;
 box-shadow:0 6px 16px rgba(216,91,146,.08);
@@ -101,8 +141,8 @@ transform:translateY(-4px);
 }
 
 .icon{
-font-size:38px;
-margin-bottom:6px;
+font-size:42px;
+margin-bottom:7px;
 }
 
 .menu-card h3{
@@ -121,6 +161,12 @@ margin-top:24px;
 font-size:13px;
 color:#b58a9c;
 }
+
+@media(max-width:480px){
+.app{padding:26px 18px;border-radius:30px;}
+h1{font-size:42px;}
+.letter{padding:22px 18px;}
+}
 </style>
 </head>
 
@@ -130,17 +176,22 @@ color:#b58a9c;
 
 <div class="logo">🌸</div>
 <h1>Keyy's Glow</h1>
-<p class="subtitle">Qué bonito verte hoy, Melissa 💖</p>
+
+<p class="greeting" id="greeting">Hola Melissa ✨</p>
+
+<div class="time-box">
+<p id="dateText">Cargando fecha...</p>
+<p class="time" id="timeText">--:--</p>
+<p class="weather">🌤️ Clima: próximamente</p>
+</div>
 
 <div class="letter">
-<h2>💌 Carta para ti</h2>
+<h2>Carta para ti</h2>
 
 <p>Querida Melissa,</p>
 
-<p>
-Hoy quiero recordarte que cada pequeño paso cuenta.
-No necesitas florecer de la noche a la mañana.
-Las flores también crecen lentamente antes de mostrar toda su belleza.
+<p id="dailyLetter">
+Hoy quiero recordarte que cada pequeño paso cuenta. No necesitas florecer de la noche a la mañana. Las flores también crecen lentamente antes de mostrar toda su belleza.
 </p>
 
 <p>
@@ -180,6 +231,44 @@ Keyy's Glow 🌷
 <p class="footer">Tu rinconcito para florecer a tu ritmo ✨</p>
 
 </div>
+
+<script>
+function updateGreeting(){
+const hour = new Date().getHours();
+const greeting = document.getElementById("greeting");
+
+if(hour >= 5 && hour < 12){
+greeting.textContent = "Buenos días, Melissa ☀️";
+}else if(hour >= 12 && hour < 19){
+greeting.textContent = "Buenas tardes, Melissa 🌷";
+}else{
+greeting.textContent = "Buenas noches, Melissa 🌙";
+}
+}
+
+function updateDateTime(){
+const now = new Date();
+
+const dateOptions = {
+weekday:"long",
+day:"numeric",
+month:"long"
+};
+
+document.getElementById("dateText").textContent =
+now.toLocaleDateString("es-ES", dateOptions);
+
+document.getElementById("timeText").textContent =
+now.toLocaleTimeString("es-ES", {
+hour:"2-digit",
+minute:"2-digit"
+});
+}
+
+updateGreeting();
+updateDateTime();
+setInterval(updateDateTime, 1000);
+</script>
 
 </body>
 </html>
