@@ -3,38 +3,265 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Bienestar | Keyy's Glow</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
-background:#fdeff4;
+background:linear-gradient(180deg,#fdeff4,#fff8fb);
 font-family:'Poppins',sans-serif;
 min-height:100vh;
-padding:30px 15px;
+padding:28px 15px;
+color:#444;
 }
 
 .container{
 background:white;
 width:100%;
-max-width:600px;
+max-width:620px;
 margin:auto;
-padding:30px;
-border-radius:30px;
+padding:30px 24px;
+border-radius:34px;
 text-align:center;
-box-shadow:0 10px 25px rgba(0,0,0,0.08);
+box-shadow:0 12px 30px rgba(216,91,146,.15);
+border:1px solid #f8dce8;
+}
+
+.back{
+display:inline-block;
+margin-bottom:20px;
+text-decoration:none;
+color:#d85b92;
+font-weight:600;
 }
 
 h1{
 font-family:'Playfair Display',serif;
+font-size:42px;
+margin-bottom:8px;
+}
+
+.subtitle{
+color:#b05b83;
+font-size:15px;
+margin-bottom:24px;
+}
+
+.section-card{
+background:#fff8fb;
+border:1px solid #f4d8e5;
+border-radius:24px;
+padding:22px;
+margin-bottom:18px;
+box-shadow:0 6px 16px rgba(216,91,146,.08);
+}
+
+.icon{
+font-size:42px;
+margin-bottom:8px;
+}
+
+h2{
+font-size:23px;
+margin-bottom:12px;
+color:#5a4a50;
+}
+
+p{
+color:#666;
+font-size:14px;
+line-height:1.6;
+}
+
+.moods{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+margin-top:12px;
+}
+
+.mood-btn{
+border:1px solid #f4d8e5;
+background:white;
+border-radius:18px;
+padding:13px;
+font-family:'Poppins',sans-serif;
+cursor:pointer;
+font-size:15px;
+}
+
+.mood-btn.active{
+background:#f7dce6;
+font-weight:600;
+}
+
+textarea{
+width:100%;
+border:1px solid #f4d8e5;
+border-radius:18px;
+padding:13px;
+font-family:'Poppins',sans-serif;
+outline:none;
+resize:none;
+margin-top:10px;
+}
+
+button{
+border:none;
+background:#d85b92;
+color:white;
+padding:12px 18px;
+border-radius:18px;
+font-family:'Poppins',sans-serif;
+font-weight:600;
+cursor:pointer;
+margin-top:10px;
+}
+
+.water{
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
+gap:10px;
+margin-top:12px;
+}
+
+.glass{
+font-size:34px;
+cursor:pointer;
+filter:grayscale(1);
+transition:.2s;
+}
+
+.glass.full{
+filter:grayscale(0);
+transform:scale(1.1);
+}
+
+.saved{
+margin-top:10px;
+color:#b05b83;
+font-size:13px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a class="back" href="index.html">← Volver al inicio</a>
+
+<h1>✨ Bienestar</h1>
+<p class="subtitle">Tu espacio para sentirte, cuidarte y respirar bonito.</p>
+
+<div class="section-card">
+<div class="icon">😊</div>
+<h2>Mood Tracker</h2>
+<p>¿Cómo te sientes hoy?</p>
+
+<div class="moods">
+<button class="mood-btn" onclick="saveMood('Feliz 😍')">😍 Feliz</button>
+<button class="mood-btn" onclick="saveMood('Tranquila 🌷')">🌷 Tranquila</button>
+<button class="mood-btn" onclick="saveMood('Motivada ✨')">✨ Motivada</button>
+<button class="mood-btn" onclick="saveMood('Cansada 😴')">😴 Cansada</button>
+<button class="mood-btn" onclick="saveMood('Triste 🥺')">🥺 Triste</button>
+<button class="mood-btn" onclick="saveMood('Estresada 😵‍💫')">😵‍💫 Estresada</button>
+</div>
+
+<p class="saved" id="moodSaved"></p>
+</div>
+
+<div class="section-card">
+<div class="icon">💖</div>
+<h2>Hoy agradezco...</h2>
+<p>Escribe algo bonito de tu día.</p>
+
+<textarea id="gratitudeText" rows="4" placeholder="Hoy agradezco..."></textarea>
+<button onclick="saveGratitude()">Guardar gratitud ✨</button>
+
+<p class="saved" id="gratitudeSaved"></p>
+</div>
+
+<div class="section-card">
+<div class="icon">💧</div>
+<h2>Agua</h2>
+<p>Toca los vasitos que ya tomaste hoy.</p>
+
+<div class="water" id="waterCups"></div>
+
+<p class="saved" id="waterSaved"></p>
+</div>
+
+</div>
+
+<script>
+const today = new Date().toDateString();
+
+function saveMood(mood){
+localStorage.setItem("mood-" + today, mood);
+document.getElementById("moodSaved").textContent = "Mood de hoy: " + mood;
+document.querySelectorAll(".mood-btn").forEach(btn=>{
+btn.classList.remove("active");
+if(btn.textContent.includes(mood.split(" ")[0])){
+btn.classList.add("active");
+}
+});
+}
+
+function loadMood(){
+const mood = localStorage.getItem("mood-" + today);
+if(mood){
+document.getElementById("moodSaved").textContent = "Mood de hoy: " + mood;
+}
+}
+
+function saveGratitude(){
+const text = document.getElementById("gratitudeText").value.trim();
+if(!text){
+alert("Escribe algo que agradeces hoy 💖");
+return;
+}
+localStorage.setItem("gratitude-" + today, text);
+document.getElementById("gratitudeSaved").textContent = "Guardado con cariño 💌";
+}
+
+function loadGratitude(){
+const text = localStorage.getItem("gratitude-" + today);
+if(text){
+document.getElementById("gratitudeText").value = text;
+document.getElementById("gratitudeSaved").textContent = "Tu gratitud de hoy está guardada 💖";
+}
+}
+
+function renderWater(){
+const container = document.getElementById("waterCups");
+container.innerHTML = "";
+let count = Number(localStorage.getItem("water-" + today)) || 0;
+
+for(let i=1;i<=8;i++){
+const cup = document.createElement("div");
+cup.className = "glass" + (i <= count ? " full" : "");
+cup.textContent = "🥛";
+cup.onclick = function(){
+localStorage.setItem("water-" + today, i);
+renderWater();
+};
+container.appendChild(cup);
+}
+
+document.getElementById("waterSaved").textContent = count + " / 8 vasitos";
+}
+
+loadMood();
+loadGratitude();
+renderWater();
+</script>
+
+</body>
+</html>font-family:'Playfair Display',serif;
 font-size:38px;
 color:#444;
 margin-bottom:8px;
