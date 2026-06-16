@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Calendario | Keyy's Glow</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+background:linear-gradient(180deg,#fdeff4,#fff8fb);
+font-family:'Poppins',sans-serif;
+min-height:100vh;
+padding:28px 15px;
+color:#444;
+}
+
+.container{
+background:white;
+width:100%;
+max-width:620px;
+margin:auto;
+padding:30px 24px;
+border-radius:34px;
+text-align:center;
+box-shadow:0 12px 30px rgba(216,91,146,.15);
+border:1px solid #f8dce8;
+}
+
+.back{
+display:inline-block;
+margin-bottom:20px;
+text-decoration:none;
+color:#d85b92;
+font-weight:600;
+}
+
+h1{
+font-family:'Playfair Display',serif;
+font-size:42px;
+margin-bottom:8px;
+}
+
+.subtitle{
+color:#b05b83;
+font-size:15px;
+margin-bottom:24px;
+}
+
+.calendar{
+background:#fff8fb;
+border:1px solid #f4d8e5;
+border-radius:26px;
+padding:20px;
+box-shadow:0 6px 16px rgba(216,91,146,.08);
+}
+
+.month{
+font-family:'Playfair Display',serif;
+font-size:28px;
+margin-bottom:18px;
+color:#7d4960;
+}
+
+.days,.dates{
+display:grid;
+grid-template-columns:repeat(7,1fr);
+gap:8px;
+}
+
+.days div{
+font-weight:600;
+color:#b05b83;
+font-size:13px;
+}
+
+.dates div{
+background:white;
+border:1px solid #f4d8e5;
+border-radius:14px;
+padding:10px 0;
+font-size:14px;
+min-height:42px;
+}
+
+.today{
+background:#f7dce6!important;
+font-weight:600;
+color:#7d4960;
+}
+
+.event-box{
+margin-top:22px;
+background:#fff8fb;
+border:1px solid #f4d8e5;
+border-radius:22px;
+padding:20px;
+}
+
+.event-box h2{
+font-size:22px;
+margin-bottom:12px;
+}
+
+input,textarea{
+width:100%;
+border:1px solid #f4d8e5;
+border-radius:16px;
+padding:12px;
+font-family:'Poppins',sans-serif;
+margin-bottom:12px;
+background:white;
+outline:none;
+}
+
+button{
+border:none;
+background:#d85b92;
+color:white;
+padding:12px 18px;
+border-radius:18px;
+font-family:'Poppins',sans-serif;
+font-weight:600;
+cursor:pointer;
+}
+
+.event-list{
+margin-top:16px;
+text-align:left;
+}
+
+.event{
+background:white;
+border:1px solid #f4d8e5;
+border-radius:16px;
+padding:12px;
+margin-bottom:10px;
+font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a class="back" href="index.html">← Volver al inicio</a>
+
+<h1>📅 Calendario</h1>
+<p class="subtitle">Organiza tus días especiales con calma y cariño.</p>
+
+<div class="calendar">
+<div class="month" id="monthTitle"></div>
+
+<div class="days">
+<div>L</div><div>M</div><div>M</div><div>J</div><div>V</div><div>S</div><div>D</div>
+</div>
+
+<div class="dates" id="calendarDates"></div>
+</div>
+
+<div class="event-box">
+<h2>🌷 Agregar recordatorio</h2>
+
+<input type="date" id="eventDate">
+<textarea id="eventText" rows="3" placeholder="Escribe tu evento o recordatorio..."></textarea>
+
+<button onclick="addEvent()">Guardar ✨</button>
+
+<div class="event-list" id="eventList"></div>
+</div>
+
+</div>
+
+<script>
+const monthNames = [
+"Enero","Febrero","Marzo","Abril","Mayo","Junio",
+"Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"
+];
+
+const today = new Date();
+const year = today.getFullYear();
+const month = today.getMonth();
+
+document.getElementById("monthTitle").textContent =
+monthNames[month] + " " + year;
+
+function renderCalendar(){
+const dates = document.getElementById("calendarDates");
+dates.innerHTML = "";
+
+const firstDay = new Date(year, month, 1);
+const lastDay = new Date(year, month + 1, 0);
+let startDay = firstDay.getDay();
+
+startDay = startDay === 0 ? 6 : startDay - 1;
+
+for(let i = 0; i < startDay; i++){
+const empty = document.createElement("div");
+empty.textContent = "";
+dates.appendChild(empty);
+}
+
+for(let day = 1; day <= lastDay.getDate(); day++){
+const div = document.createElement("div");
+div.textContent = day;
+
+if(day === today.getDate()){
+div.classList.add("today");
+}
+
+dates.appendChild(div);
+}
+}
+
+function getEvents(){
+return JSON.parse(localStorage.getItem("keyysEvents")) || [];
+}
+
+function saveEvents(events){
+localStorage.setItem("keyysEvents", JSON.stringify(events));
+}
+
+function addEvent(){
+const date = document.getElementById("eventDate").value;
+const text = document.getElementById("eventText").value.trim();
+
+if(!date || !text){
+alert("Agrega una fecha y un recordatorio 💖");
+return;
+}
+
+const events = getEvents();
+events.push({date,text});
+saveEvents(events);
+
+document.getElementById("eventDate").value = "";
+document.getElementById("eventText").value = "";
+
+renderEvents();
+}
+
+function renderEvents(){
+const list = document.getElementById("eventList");
+const events = getEvents();
+
+list.innerHTML = "";
+
+if(events.length === 0){
+list.innerHTML = "<p style='text-align:center;color:#888;'>Aún no tienes recordatorios.</p>";
+return;
+}
+
+events.forEach(event=>{
+const div = document.createElement("div");
+div.className = "event";
+div.innerHTML = `<strong>${event.date}</strong><br>${event.text}`;
+list.appendChild(div);
+});
+}
+
+renderCalendar();
+renderEvents();
+</script>
+
+</body>
+</html>
