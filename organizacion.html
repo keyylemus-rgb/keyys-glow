@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-  <link rel="stylesheet" href="style.css">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +7,7 @@
 <title>Organización | Keyy's Glow</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -16,7 +16,7 @@ body{
 background:linear-gradient(180deg,#fdeff4,#fff8fb);
 font-family:'Poppins',sans-serif;
 min-height:100vh;
-padding:28px 15px;
+padding:28px 15px 100px;
 color:#444;
 }
 
@@ -57,24 +57,100 @@ background:#fff8fb;
 border:1px solid #f4d8e5;
 border-radius:24px;
 padding:22px;
-margin-bottom:16px;
+margin-bottom:18px;
 box-shadow:0 6px 16px rgba(216,91,146,.08);
+text-align:left;
 }
 
 .icon{
-font-size:42px;
+font-size:40px;
+text-align:center;
 margin-bottom:8px;
 }
 
 h2{
-font-size:24px;
-margin-bottom:8px;
+font-size:23px;
+margin-bottom:12px;
+color:#5a4a50;
+text-align:center;
 }
 
 p{
 color:#666;
 font-size:14px;
 line-height:1.6;
+}
+
+.check-item{
+display:flex;
+align-items:center;
+gap:10px;
+background:white;
+border:1px solid #f4d8e5;
+border-radius:16px;
+padding:12px;
+margin-bottom:10px;
+font-size:14px;
+}
+
+.check-item input{
+width:18px;
+height:18px;
+accent-color:#d85b92;
+}
+
+input, textarea{
+width:100%;
+border:1px solid #f4d8e5;
+border-radius:16px;
+padding:13px;
+font-family:'Poppins',sans-serif;
+outline:none;
+resize:none;
+background:white;
+margin-top:8px;
+}
+
+button{
+border:none;
+background:#d85b92;
+color:white;
+padding:12px 18px;
+border-radius:18px;
+font-family:'Poppins',sans-serif;
+font-weight:600;
+cursor:pointer;
+margin-top:10px;
+}
+
+.saved{
+margin-top:10px;
+color:#b05b83;
+font-size:13px;
+text-align:center;
+}
+
+.goal-box, .priority-box, .note-box{
+background:white;
+border:1px solid #f4d8e5;
+border-radius:18px;
+padding:14px;
+margin-top:12px;
+color:#666;
+font-size:14px;
+line-height:1.6;
+}
+
+.success-message{
+display:none;
+background:#fff0f6;
+border:1px solid #f4d8e5;
+border-radius:20px;
+padding:16px;
+margin-top:14px;
+text-align:center;
+color:#b05b83;
+font-weight:600;
 }
 </style>
 </head>
@@ -86,27 +162,83 @@ line-height:1.6;
 <a class="back" href="index.html">← Volver al inicio</a>
 
 <h1>📝 Organización</h1>
-<p class="subtitle">Pequeños pasos para ordenar tu día con calma.</p>
+<p class="subtitle">Ordena tu día con calma, sin presionarte demasiado.</p>
 
 <div class="section-card">
-<div class="icon">✨</div>
-<h2>Hábitos</h2>
-<p>Agua, skincare, ejercicio, lectura, descanso y hábitos que quieras agregar.</p>
+<div class="icon">✅</div>
+<h2>Checklist diario</h2>
+<p style="text-align:center; margin-bottom:14px;">Marca lo que completes hoy.</p>
+
+<label class="check-item">
+<input type="checkbox" class="daily-check" data-task="cama">
+Tender la cama
+</label>
+
+<label class="check-item">
+<input type="checkbox" class="daily-check" data-task="agua">
+Tomar agua
+</label>
+
+<label class="check-item">
+<input type="checkbox" class="daily-check" data-task="skincare">
+Skincare
+</label>
+
+<label class="check-item">
+<input type="checkbox" class="daily-check" data-task="ejercicio">
+Ejercicio
+</label>
+
+<label class="check-item">
+<input type="checkbox" class="daily-check" data-task="leer">
+Leer un poquito
+</label>
+
+<label class="check-item">
+<input type="checkbox" class="daily-check" data-task="descansar">
+Dormir temprano
+</label>
+
+<div class="success-message" id="successMessage">
+🌸 ¡Muy bien, Melissa! Completaste tu checklist de hoy.
+</div>
+</div>
+
+<div class="section-card">
+<div class="icon">⭐</div>
+<h2>Prioridad del día</h2>
+<p style="text-align:center;">Una cosa importante para hoy.</p>
+
+<input type="text" id="priorityInput" placeholder="Hoy lo más importante es...">
+<button onclick="savePriority()">Guardar prioridad ✨</button>
+
+<div class="priority-box" id="priorityBox">Aún no has guardado una prioridad.</div>
+</div>
+
+<div class="section-card">
+<div class="icon">🎯</div>
+<h2>Meta semanal</h2>
+<p style="text-align:center;">Elige una meta bonita y alcanzable para esta semana.</p>
+
+<input type="text" id="goalInput" placeholder="Esta semana quiero...">
+<button onclick="saveGoal()">Guardar meta 🌷</button>
+
+<div class="goal-box" id="goalBox">Aún no has guardado una meta semanal.</div>
 </div>
 
 <div class="section-card">
 <div class="icon">📝</div>
 <h2>Notas rápidas</h2>
-<p>Un espacio para escribir ideas, pendientes, recordatorios o pensamientos.</p>
+<p style="text-align:center;">Ideas, recordatorios o pensamientos del día.</p>
+
+<textarea id="notesInput" rows="6" placeholder="Escribe aquí tus notas..."></textarea>
+<button onclick="saveNotes()">Guardar notas 💌</button>
+
+<p class="saved" id="notesSaved"></p>
 </div>
 
-<div class="section-card">
-<div class="icon">🎯</div>
-<h2>Metas</h2>
-<p>Organiza tus metas semanales y mensuales sin presionarte demasiado.</p>
 </div>
 
-</div>
 <nav class="bottom-nav">
 <a href="index.html"><span>🏠</span>Inicio</a>
 <a href="bienestar.html"><span>✨</span>Bienestar</a>
@@ -114,5 +246,105 @@ line-height:1.6;
 <a href="personal.html"><span>🌷</span>Personal</a>
 <a href="calendario.html"><span>📅</span>Calendario</a>
 </nav>
+
+<script>
+const today = new Date().toDateString();
+
+function saveChecklist(){
+const checks = document.querySelectorAll(".daily-check");
+let completed = 0;
+
+checks.forEach(check=>{
+localStorage.setItem("check-" + today + "-" + check.dataset.task, check.checked);
+if(check.checked) completed++;
+});
+
+if(completed === checks.length){
+document.getElementById("successMessage").style.display = "block";
+}else{
+document.getElementById("successMessage").style.display = "none";
+}
+}
+
+function loadChecklist(){
+const checks = document.querySelectorAll(".daily-check");
+let completed = 0;
+
+checks.forEach(check=>{
+const saved = localStorage.getItem("check-" + today + "-" + check.dataset.task);
+check.checked = saved === "true";
+if(check.checked) completed++;
+
+check.addEventListener("change", saveChecklist);
+});
+
+if(completed === checks.length){
+document.getElementById("successMessage").style.display = "block";
+}
+}
+
+function savePriority(){
+const text = document.getElementById("priorityInput").value.trim();
+
+if(!text){
+alert("Escribe una prioridad para hoy 💖");
+return;
+}
+
+localStorage.setItem("priority-" + today, text);
+document.getElementById("priorityBox").textContent = text;
+}
+
+function loadPriority(){
+const text = localStorage.getItem("priority-" + today);
+
+if(text){
+document.getElementById("priorityInput").value = text;
+document.getElementById("priorityBox").textContent = text;
+}
+}
+
+function saveGoal(){
+const text = document.getElementById("goalInput").value.trim();
+
+if(!text){
+alert("Escribe una meta semanal 🌷");
+return;
+}
+
+localStorage.setItem("weeklyGoal", text);
+document.getElementById("goalBox").textContent = text;
+}
+
+function loadGoal(){
+const text = localStorage.getItem("weeklyGoal");
+
+if(text){
+document.getElementById("goalInput").value = text;
+document.getElementById("goalBox").textContent = text;
+}
+}
+
+function saveNotes(){
+const text = document.getElementById("notesInput").value;
+localStorage.setItem("notes-" + today, text);
+document.getElementById("notesSaved").textContent = "Notas guardadas con cariño 💌";
+}
+
+function loadNotes(){
+const text = localStorage.getItem("notes-" + today);
+
+if(text){
+document.getElementById("notesInput").value = text;
+document.getElementById("notesSaved").textContent = "Tus notas de hoy están guardadas 💖";
+}
+}
+
+loadChecklist();
+loadPriority();
+loadGoal();
+loadNotes();
+</script>
+
 </body>
 </html>
