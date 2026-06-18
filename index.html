@@ -1,23 +1,21 @@
 <!DOCTYPE html>
 <html lang="es">
-  <link rel="stylesheet" href="style.css">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Keyy's Glow</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-
-  
 
 body{
 background:linear-gradient(180deg,#fdeff4,#fff8fb);
 font-family:'Poppins',sans-serif;
 min-height:100vh;
-padding:26px 15px;
+padding:26px 15px 100px;
 color:#4a4045;
 }
 
@@ -194,7 +192,7 @@ h1{font-size:42px;}
 <p>Querida Melissa,</p>
 
 <p id="dailyLetter">
-Hoy quiero recordarte que cada pequeño paso cuenta. No necesitas florecer de la noche a la mañana. Las flores también crecen lentamente antes de mostrar toda su belleza.
+Cargando tu carta de hoy...
 </p>
 
 <p>
@@ -235,7 +233,39 @@ Keyy's Glow 🌷
 
 </div>
 
+<nav class="bottom-nav">
+<a href="index.html"><span>🏠</span>Inicio</a>
+<a href="bienestar.html"><span>✨</span>Bienestar</a>
+<a href="organizacion.html"><span>📝</span>Organización</a>
+<a href="personal.html"><span>🌷</span>Personal</a>
+<a href="calendario.html"><span>📅</span>Calendario</a>
+</nav>
+
 <script>
+const letters = [
+"Hoy quiero recordarte que cada pequeño paso cuenta. No necesitas florecer de la noche a la mañana. Las flores también crecen lentamente antes de mostrar toda su belleza.",
+"Hoy recuerda que descansar también es avanzar. No tienes que hacerlo todo perfecto para merecer sentirte tranquila.",
+"Confía en tu proceso. Aunque hoy no veas todos los resultados, cada esfuerzo pequeño está construyendo algo bonito.",
+"Hoy es una nueva oportunidad para tratarte con cariño. Háblate bonito, respira profundo y sigue a tu ritmo.",
+"No compares tu camino con el de nadie más. Tu crecimiento también es valioso, aunque sea silencioso.",
+"Hoy mereces reconocer lo mucho que has avanzado. Incluso los días difíciles también cuentan como parte de tu historia.",
+"Recuerda que no tienes que cargar con todo al mismo tiempo. Paso a paso también se llega lejos."
+];
+
+function getDayOfYear(){
+const now = new Date();
+const start = new Date(now.getFullYear(), 0, 0);
+const diff = now - start;
+const oneDay = 1000 * 60 * 60 * 24;
+return Math.floor(diff / oneDay);
+}
+
+function updateDailyLetter(){
+const day = getDayOfYear();
+const index = (day - 1) % letters.length;
+document.getElementById("dailyLetter").textContent = letters[index];
+}
+
 function updateGreeting(){
 const hour = new Date().getHours();
 const greeting = document.getElementById("greeting");
@@ -270,16 +300,9 @@ minute:"2-digit"
 
 updateGreeting();
 updateDateTime();
+updateDailyLetter();
 setInterval(updateDateTime, 1000);
 </script>
 
-  <nav class="bottom-nav">
-<a href="index.html"><span>🏠</span>Inicio</a>
-<a href="bienestar.html"><span>✨</span>Bienestar</a>
-<a href="organizacion.html"><span>📝</span>Organización</a>
-<a href="personal.html"><span>🌷</span>Personal</a>
-<a href="calendario.html"><span>📅</span>Calendario</a>
-</nav>
-  
 </body>
 </html>
